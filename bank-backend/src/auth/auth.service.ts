@@ -136,13 +136,13 @@ export class AuthService {
         const payload = { sub: userId, email, role };
 
         const accessToken = this.jwtService.sign(payload, {
-            secret: this.configService.get('JWT_SECRET'),
-            expiresIn: this.configService.get('JWT_EXPIRES_IN'),
+            secret: this.configService.get('JWT_SECRET') || 'default_secret_key_123',
+            expiresIn: this.configService.get('JWT_EXPIRES_IN') || '15m',
         });
 
         const refreshToken = this.jwtService.sign(payload, {
-            secret: this.configService.get('JWT_REFRESH_SECRET'),
-            expiresIn: this.configService.get('JWT_REFRESH_EXPIRES_IN'),
+            secret: this.configService.get('JWT_REFRESH_SECRET') || 'default_refresh_secret_key_456',
+            expiresIn: this.configService.get('JWT_REFRESH_EXPIRES_IN') || '7d',
         });
 
         return { accessToken, refreshToken };
