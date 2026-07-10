@@ -8,12 +8,14 @@ import api from '@/lib/api';
 import ThemeToggle from '@/components/ThemeToggle';
 import BottomNav from '@/components/BottomNav';
 import { UserProfile } from '@/types';
+import { registerBiometric } from '@/lib/webauthn';
 
 export default function ProfilePage() {
     const router = useRouter();
     const { ready } = useAuth();
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
+    const [biometricLoading, setBiometricLoading] = useState(false);
 
     useEffect(() => {
         if (!ready) return;
@@ -44,6 +46,19 @@ export default function ProfilePage() {
         .toUpperCase();
 
     if (!ready) return null;
+
+    const handleActivateBiometric = async () => {
+        setBiometricLoading(true);
+        try {
+            await registerBiometric(`${navigator.platform || 'Perangkat'} - ${profile?.fullName}`);
+            alert('Biometrik berhasil diaktifkan! Sekarang kamu bisa login pakai sidik jari/Face ID.');
+        } catch (err: any) {
+            console.error(err);
+            alert('Gagal mengaktifkan biometrik. Pastikan device kamu mendukung fingerprint/Face ID.');
+        } finally {
+            setBiometricLoading(false);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-background dark:bg-on-background pb-32">
@@ -125,9 +140,8 @@ export default function ProfilePage() {
                             <SettingItem
                                 icon="fingerprint"
                                 title="Keamanan & Biometrik"
-                                subtitle="PIN, Face ID, dan kata sandi"
-                                badge="AKTIF"
-                                onClick={() => alert('Fitur biometrik belum tersedia')}
+                                subtitle={biometricLoading ? 'Memproses...' : 'Aktifkan login sidik jari/Face ID'}
+                                onClick={handleActivateBiometric}
                             />
                             <Link href="/profile/notifications">
                                 <SettingItem

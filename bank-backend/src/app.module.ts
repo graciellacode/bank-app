@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { AdminModule } from './admin/admin.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { WebauthnModule } from './webauthn/webauthn.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { NotificationsModule } from './notifications/notifications.module';
     TransactionsModule,
     AdminModule,
     NotificationsModule,
+    WebauthnModule,
   ],
   controllers: [AppController],
   providers: [

@@ -9,7 +9,7 @@ services:
       MYSQL_USER: bankuser
       MYSQL_PASSWORD: bankpassword
     ports:
-      - "3306:3306"
+      - "3606:3306"
     volumes:
       - bank_mysql_data:/var/lib/mysql
 

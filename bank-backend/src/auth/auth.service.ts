@@ -108,6 +108,30 @@ export class AuthService {
         return { message: 'Logout berhasil' };
     }
 
+    // Ganti "private async issueTokensAndRespond" menjadi:
+    async issueTokensForUser(user: {
+        id: number;
+        email: string;
+        role: string;
+        fullName: string;
+    }) {
+        const tokens = await this.generateTokens(user.id, user.email, user.role);
+        const refreshTokenHash = await bcrypt.hash(tokens.refreshToken, 10);
+        await this.usersService.updateRefreshTokenHash(user.id, refreshTokenHash);
+
+        return {
+            message: 'Login berhasil',
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+            user: {
+                id: user.id,
+                fullName: user.fullName,
+                email: user.email,
+                role: user.role,
+            },
+        };
+    }
+
     private async generateTokens(userId: number, email: string, role: string) {
         const payload = { sub: userId, email, role };
 

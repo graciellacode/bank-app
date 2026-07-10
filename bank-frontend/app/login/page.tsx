@@ -6,6 +6,7 @@ import Link from 'next/link';
 import api from '@/lib/api';
 import ThemeToggle from '@/components/ThemeToggle';
 import { LoginResponse } from '@/types';
+import { loginWithBiometric } from '@/lib/webauthn';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -40,8 +41,27 @@ export default function LoginPage() {
         }
     };
 
-    const handleBiometric = () => {
-        alert('Login biometrik belum tersedia — akan segera hadir');
+    const handleBiometric = async () => {
+        const email = form.email || prompt('Masukkan email Anda untuk login biometrik:');
+        if (!email) return;
+
+        setError('');
+        setLoading(true);
+        try {
+            const res = await loginWithBiometric(email);
+            localStorage.setItem('accessToken', res.accessToken);
+            localStorage.setItem('refreshToken', res.refreshToken);
+            localStorage.setItem('user', JSON.stringify(res.user));
+            router.push(res.user.role === 'admin' ? '/admin/users' : '/dashboard');
+        } catch (err: any) {
+            setError(
+                err.response?.data?.message ||
+                err.message ||
+                'Login biometrik gagal atau dibatalkan',
+            );
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
