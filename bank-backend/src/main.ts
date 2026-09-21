@@ -12,7 +12,24 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   app.enableCors({
-    origin: process.env.WEBAUTHN_ORIGIN || 'http://localhost:3050',
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      const allowedOrigins = [
+        process.env.WEBAUTHN_ORIGIN,
+        process.env.FRONTEND_URL,
+        'http://localhost:3000',
+        'http://localhost:3050',
+        'http://localhost:3500',
+      ].filter(Boolean);
+
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.endsWith('.vercel.app')
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     credentials: true,
   });
 
