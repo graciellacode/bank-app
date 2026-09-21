@@ -18,7 +18,7 @@ const bootstrap = async () => {
   app.setGlobalPrefix('api');
 
   app.enableCors({
-    origin: process.env.WEBAUTHN_ORIGIN || 'http://localhost:3500',
+    origin: process.env.WEBAUTHN_ORIGIN || 'http://localhost:3050',
     credentials: true,
   });
 
