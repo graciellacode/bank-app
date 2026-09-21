@@ -19,19 +19,7 @@ const bootstrap = async () => {
 
   app.enableCors({
     origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      const allowedOrigins = [
-        process.env.WEBAUTHN_ORIGIN,
-        process.env.FRONTEND_URL,
-        'http://localhost:3000',
-        'http://localhost:3050',
-        'http://localhost:3500',
-      ].filter(Boolean);
-
-      if (
-        allowedOrigins.includes(origin) ||
-        origin.endsWith('.vercel.app')
-      ) {
+      if (!origin || origin.includes('localhost') || origin.endsWith('.vercel.app')) {
         return callback(null, true);
       }
       return callback(null, true);
