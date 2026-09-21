@@ -27,6 +27,7 @@ import { WebauthnModule } from './webauthn/webauthn.module';
         username: config.get('DB_USERNAME'),
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_DATABASE'),
+        ssl: config.get('DB_SSL') === 'true' ? { rejectUnauthorized: false } : false,
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
         logging: true,

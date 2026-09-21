@@ -7,18 +7,18 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Aktifkan Helmet SEBELUM middleware lain (urutan penting)
-  app.use(helmet());
-
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+    }),
+  );
   app.setGlobalPrefix('api');
 
   app.enableCors({
-    origin: (origin, callback) => {
-      if (!origin || origin.includes('localhost') || origin.endsWith('.vercel.app')) {
-        return callback(null, true);
-      }
-      return callback(null, true);
-    },
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
+    allowedHeaders: 'Content-Type, Accept, Authorization',
   });
 
   app.useGlobalPipes(
